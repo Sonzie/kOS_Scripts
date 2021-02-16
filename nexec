@@ -1,0 +1,67 @@
+clearscreen.
+set nd to nextnode.
+sas off.
+rcs on.
+IF SHIP:MAXTHRUST < 0.1 AND SHIP:MASS > SHIP:DRYMASS {
+   STAGE.
+}.
+set max_acc to ship:maxthrust/ship:mass.
+
+set burn_dur to nd:deltav:mag/max_acc.
+print "Estimated burn time: " + round(burn_dur) + "s".
+
+lock np to nd:deltav.
+lock steering to np.
+wait until vang(np, ship:facing:vector) < 0.25.
+rcs off.
+kuniverse:timewarp:warpto(time:seconds + nd:eta - (burn_dur/2 + 30)).
+//until nd:eta <= (burn_dur/2 + 30)
+
+rcs on.
+wait until nd:eta <= (burn_dur/2).
+rcs off.
+set tset to 0.
+lock throttle to tset.
+
+set done to False.
+
+set dv0 to nd:deltav.
+until done
+{
+   IF SHIP:MAXTHRUST < 0.1 AND SHIP:MASS > SHIP:DRYMASS {
+      STAGE.
+   }.
+   set max_acc to ship:maxthrust/ship:mass.
+   if max_acc < 0.1
+   {
+      stage.
+   }else{
+      set tset to min(nd:deltav:mag/max_acc, 1).
+   }.
+
+   if vdot(dv0, nd:deltav) < 0
+   {
+      print "End burn, remain dv " + round(nd:deltav:mag,1) + "m/s. vdot: " + round(vdot(dv0, nd:deltav),1).
+      lock throttle to 0.
+      break.
+   }.
+
+   if nd:deltav:mag < 0.1
+   {
+      print "Finalizing burn, remain dv " + round(nd:deltav:mag,1) + "m/s. vdot: " + round(vdot(dv0, nd:deltav),1).
+      wait until vdot(dv0, nd:deltav) < 0.5.
+
+      lock throttle to 0.
+      print "End burn, remain dv " + round(nd:deltav:mag,1) + "m/s. vdot: " + round(vdot(dv0, nd:deltav),1).
+      set done to True.
+   }.
+}.
+
+unlock steering.
+unlock throttle.
+
+wait 1.
+sas off.
+sas off.
+remove nd.
+SET SHIP:CONTROL:PILOTMAINTHROTTLE TO 0.

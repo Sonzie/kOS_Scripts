@@ -1,0 +1,33 @@
+run getMaxIncDiff.
+clearscreen.
+print "Rendezvous sequence initiated...".
+set tElapse to time:seconds - incDiffT0.
+set rorb1 to node(tMaxIncDiff,0,0,0).
+add rorb1.
+lock head to rorb1:prograde.
+
+set incDiff to rorb1:orbit:inclination - target:orbit:inclination.
+set incDiffOld to incDiff + 1.
+set sign to 1.
+until abs(incDiff) < 0.001 {
+  if incDiff > incDiffOld {
+    set sign to sign * (-1).
+  }
+
+  if incDiff > 10 {
+    set diff to 5.
+  } else if incDiff > 5 {
+    set diff to 1.
+  }else if incDiff > 1 {
+    set diff to 0.1.
+  }else if incDiff > 0.1 {
+    set diff to 0.01.
+  } else if incDiff > 0.01 {
+    set diff to 0.001.
+  } else {
+    set diff to 0.0001.
+  }
+  set rorb1:normal to rorb1:normal + (diff * sign).
+  set incDiffOld to incDiff.
+}
+run nexec.

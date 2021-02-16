@@ -1,0 +1,25 @@
+
+set aG to -1*ship:sensors:grav:mag.
+set maxAccel to ship:maxthrust/ship:mass.
+set accel to (throttle*ship:maxthrust)/ship:mass.
+set nMaxAccel to maxAccel + aG.
+set nAccel to accel + aG.
+set estTime to ship:verticalspeed/nMaxAccel.
+set estAlt to 0.5 * nMaxAccel * estTime^2.
+set altrad to sbound:bottomaltradar.
+
+
+print "alt0: " + alt0 + "                    " at(0,3).
+print "maxAccel: " + maxAccel + "                    "  at(0,5).
+print "estTime: " + estTime + "                    " at(0,6).
+print "estAlt: " + estAlt + "                    " at(0,7).
+print "accel: " + accel + "                    " at(0,8).
+print "nMaxAccel: " + nMaxAccel + "                    " at(0,9).
+print "nAccel: " + nAccel + "                    " at(0,10).
+print "aG: " + aG + "                    " at(0,11).
+print "vertspeed: " + ship:verticalspeed + "                    " at(0,12).
+print "T: " + T + "                    " at(0,13).
+print "altrad: " + altrad + "                    " at(0,14).
+//print "acc2: " + ship:sensors:acc:mag at(0,14).
+
+print "ship status: " + ship:status + "                    " at(0,20).

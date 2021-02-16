@@ -1,0 +1,37 @@
+
+set targPos to target:geoposition.
+set pos to ship:geoposition.
+
+set targLat to targPos:lat.
+set thisLat to pos:lat.
+//set latDiff to targLat - thisLat.
+
+set targLng to targPos:lng.
+set thisLng to pos:lng.
+//set lngDiff to targLng - thisLng.
+
+set targAlt to target:altitude.
+set thisAlt to ship:altitude.
+//set altDiff to targAlt - thisAlt.
+
+set rvdT to time:seconds.
+
+//fghjkjhj
+
+set targLatOld to targLat.
+set thisLatOld to thisLat.
+//set latDiffOld to latDiff.
+
+set targLngOld to targLng.
+set thisLngOld to thisLng.
+//set lngDiffOld to lngDiff.
+
+set targAltOld to targAlt.
+set thisAltOld to thisAlt.
+//set altDiffOld to altDiff.
+
+//set posDiffOld to posDiff.
+set thisLngOld to thisLng.
+set rvdTOld to rvdT.
+//-----swap for init op
+set rVelMag to 0.

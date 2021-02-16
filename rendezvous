@@ -1,0 +1,37 @@
+clearscreen.
+print "Rendezvous sequence initiated...".
+sas on.
+set navmode to "TARGET".
+set sasmode to "RETROGRADE".
+run initrendezvousdata.
+set parked to false.
+set T to 0.
+lock throttle to T.
+
+set gettingCloser to False.
+set holdOn to 0.
+until gettingCloser {
+  wait 0.001.
+  run getrendezvousdata.
+
+  if rAccel > 0 and holdOn > 10{
+    set gettingCloser to true.
+  }.
+  set holdOn to holdOn + 1.
+}.
+
+until parked{
+  wait 0.001.
+  run getrendezvousdata.
+ if rAccel < -0.01 {
+   set sasmode to "RETROGRADE".
+   print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO" at(5,20).
+   run killrvel.
+   set parked to True.
+ }.
+}.
+
+//print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO" at(5,20).
+
+
+//set throttle to 1.

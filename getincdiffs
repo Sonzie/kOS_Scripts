@@ -1,0 +1,25 @@
+clearscreen.
+set incDiffNode to node(time:seconds + 30,0,0,0).
+add incDiffNode.
+
+set incDiffList to list().
+
+set tStep to ship:orbit:period/360.
+set t0 to time:seconds.
+set t to t0 + tStep.
+until t >= t0 + ship:orbit:period{
+  set incDiffNode:eta to t.
+  set incOld to abs(incDiffNode:orbit:inclination - target:orbit:inclination).
+  set incDiffNode:normal to incDiffNode:normal + 10.
+  set inc to abs(incDiffNode:orbit:inclination - target:orbit:inclination).
+  set incDiffNode:normal to incDiffNode:normal - 10.
+
+  set incDiff to abs(inc - incOld).
+
+  incDiffList:add(list(incDiff, t)).
+  set t to t + tStep.
+  print "incDiffList: " + incDiffList at(0,5).
+}
+
+set incDiffT0 to t0.
+remove incDiffNode.

@@ -1,0 +1,44 @@
+clearscreen.
+print "kill rel vel sequence initiated...".
+sas on.
+unlock steering.
+set sasmode to "RETROGRADE".
+
+
+set myUp to SHIP:UP:vector.
+//set facingrightWay to False.
+//until facingrightWay {
+//  print vang(ship:retrograde:vector, ship:facing:vector) at(0,4).
+//   if vang(ship:retrograde:vector, ship:facing:vector) < 0.25{
+//     set facingrightWay to True.
+//   }.
+//}
+//wait until abs(ship:facing = vcrs(ship:prograde:vector, myUp)) < 0.01 or abs(ship:facing- vcrs(ship:RETROGRADE:vector, myUp)) < 0.01.
+
+lock throttle to T.
+set maxAccel to ship:maxthrust/ship:mass.
+set accel to T * maxAccel.
+
+set krvDeltaT to 0.25.
+set Tx to abs(rVelMag)/(krvDeltaT*maxAccel).
+if Tx < 1{
+  print "krvDeltaT: " + krvDeltaT at(0,6).
+  print "T: " + T at(0,7).
+  print "Tx: " + Tx at(0,7).
+}else {
+  until Tx < 1 {
+    set krvDeltaT to krvDeltaT + 0.25.
+    set Tx to abs(rVelMag)/(krvDeltaT*maxAccel).
+    print "krvDeltaT: " + krvDeltaT at(0,6).
+    print "Tx: " + Tx at(0,7).
+    print "T: " + T at(0,8).
+  }.
+}.
+set T to Tx.
+set krvT0 to time:seconds.
+set krvT to time:seconds.
+until krvT - krvT0 >= krvDeltaT{
+  set krvT to time:seconds.
+
+}.
+set T to 0.

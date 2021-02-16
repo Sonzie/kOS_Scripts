@@ -1,0 +1,16 @@
+clearscreen.
+run getIncDiffs.
+clearscreen.
+set maxIncDiff to incDiffList[0][0].
+set tMaxIncDiff to incDiffList[0][1].
+
+from {set i to 1.} until i >= incDiffList:length - 1 step {set i to i + 1.} do {
+
+   if (incDiffList[i][0] > maxIncDiff){
+     set maxIncDiff to incDiffList[i][0].
+     set tMaxIncDiff to incDiffList[i][1].
+   }
+
+   print "maxIncDiff: " + maxIncDiff at(25,6).
+   print "tMaxIncDiff: " + tMaxIncDiff at(25,7).
+}

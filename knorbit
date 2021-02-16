@@ -1,0 +1,75 @@
+clearscreen.
+print "knorbit init...".
+set talt to 100000.
+set nap to talt.
+set buffer to 2.
+set instable to True.
+set norb to node(time:seconds + 10,0,0,-50).
+add norb.
+set thresh to True.
+set inOrbit to False.
+until inOrbit
+{
+  print "nap: " + nap at(0,4).
+  set nold to norb.
+  if instable and norb:orbit:apoapsis <= ship:apoapsis - buffer
+  {
+    set norb:eta to norb:eta + 1.
+    if norb:orbit:apoapsis < nold:orbit:apoapsis
+    {
+      set norb:eta to norb:eta - 2.01.
+    }.
+    set nap to norb:orbit:apoapsis.
+  } else if norb:orbit:periapsis < nap - 100{
+    if norb:orbit:apoapsis > ship:apoapsis - buffer.
+    {
+      set instable to False.
+    }.
+
+    print "   " at(0,6).//testing line *****
+    if norb:orbit:periapsis < 70000 and thresh
+    {
+      print "1.0" at(0,5).//testing line *****
+      set norb:prograde to norb:prograde + 1.
+      if norb:orbit:periapsis >= 70000
+      {
+        set thresh to False.
+      }.
+    } else if norb:orbit:apoapsis > norb:orbit:periapsis + 100{
+      print "3.0" at(0,5).//testing line *****
+      set oapo to norb:orbit:apoapsis.
+      set oper to norb:orbit:periapsis.
+      set norb:prograde to norb:prograde - 1.
+      set odiff to oapo - oper.
+      set ndiff to norb:orbit:apoapsis - norb:orbit:periapsis.
+      set ddiff to odiff - ndiff.
+      print "old diff: " + odiff at(10,9).//testing line *****
+      print "new diff: " + ndiff at(10,10).//testing line *****
+      print "diff diff: " + ddiff at(10,11).//testing line *****
+
+      if odiff < ndiff
+      {
+        print "3.1" at(0,6).//testing line *****
+        set norb:prograde to norb:prograde + 2.
+      }.
+    }.
+    if norb:orbit:periapsis >= 70000 and norb:orbit:periapsis < nap - buffer{
+      set oper to norb:orbit:periapsis.
+      set norb:radialout to norb:radialout - 1.
+      print "2.0" at(0,5).//testing line *****
+      print "old periapsis: "+ oper at(10,5).//testing line *****
+      print "periapsis: " + norb:orbit:periapsis at(10,6).//testing line *****
+      set diff to norb:orbit:periapsis - oper.
+      print "diff: " + diff at(10,7).//testing line *****
+      if oper - norb:orbit:periapsis > 0
+      {
+        print "2" at(0,6).//testing line *****
+        set norb:radialout to norb:radialout + 2.1.
+      }.
+    }.
+  } else{
+    set inOrbit to True.
+  }.
+}.
+unlock steering.
+run nexec.

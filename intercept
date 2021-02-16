@@ -1,0 +1,17 @@
+clearscreen.
+print "Intercept sequence initiated...".
+//match planes if needed
+if abs(ship:orbit:inclination - target:orbit:inclination) >= 0.001 {
+  run matchInclination.
+  clearscreen.
+}
+//check if below or above and set variable to signify
+if ship:altitude < target:altitude{
+  set sign to 1.
+} else{
+  set sign to -1.
+}
+//inclreas or decrease prograde based on if above or below
+until goodIntercept {
+
+}

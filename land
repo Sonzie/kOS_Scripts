@@ -1,0 +1,128 @@
+clearscreen.
+print "Landing sequence initiated...".
+set prep to 200.
+set atalt to 90000.
+set hvkOffset to -0.25.
+set hk to False.
+set alt0 to 0.
+set t1 to -99.
+set T to 0.
+global sbound is ship:bounds.
+
+lock throttle to T.
+lock head TO ship:retrograde.
+LOCK STEERING TO head.
+
+run landdata.
+//set aG to -1*ship:sensors:grav:mag.
+//set maxAccel to ship:maxthrust/ship:mass.
+//set accel to (throttle*ship:maxthrust)/ship:mass.
+//set nMaxAccel to maxAccel + aG.
+//set nAccel to accel + aG.
+//set estTime to ship:verticalspeed/nMaxAccel.
+//set estAlt to ship:verticalspeed * estTime + 0.5 * nMaxAccel * estTime^2.
+
+
+//set aG to ship:sensor:grav * 9.802.
+
+//print "maxAccel: " + maxAccel at(0,5).
+//print "estTime: " + estTime at(0,6).
+//print "estAlt: " + estAlt at(0,7).
+//print "accel: " + accel at(0,8).
+//print "nMaxAccel: " + nMaxAccel at(0,9).
+//print "aG: " + aG at(0,10).
+//print "acc2: " + ship:sensors:acc:mag at(0,14).
+
+
+wait until alt:radar < atalt.
+
+if ship:groundspeed > 0.1 and hk{
+  set hvk to node(time:seconds + 30,0,0,hvkOffset*ship:groundspeed).
+  add hvk.
+  run nexec.
+}.
+brakes on.
+
+set ninit to True.
+LOCK STEERING TO head.
+lock head TO ship:srfretrograde.
+lock throttle to T.
+set dtl to 0.
+until altrad < 0.1 or ship:status = "LANDED" and throttle < 0.01 and dtl > 5
+{
+  if altrad < 0.1 or ship:status = "LANDED"
+  {
+    if t1 < 0
+    {
+      set t1 to time:seconds.
+    }
+    set t2 to time:seconds.
+    set dtl to t2 - t1.
+  }else{
+    set t1 to -99.
+  }
+  set Tdiff to 0.
+  run landdata. //VERY IMPORTANT GETS ALL DATA
+
+
+  if altrad <= estAlt + prep or altrad < 1000 or ship:verticalspeed > 0.01 or estAlt < 100 {
+    if ninit {
+      gear on.
+      set alt0 to altrad.
+      set ninit to False.
+    }.
+
+    if ship:verticalspeed < -1000{
+      set Tdiff to 0.1.
+    } else {
+      if ship:verticalspeed < -100 and T < 1 and altrad < 1500{
+        set Tdiff to 0.1.
+      } else if ship:verticalspeed < -50 and T < 1 and altrad < 100{
+        set Tdiff to 0.1.
+      } else if ship:verticalspeed < -10 and T < 1 and altrad < 50{
+        set Tdiff to 0.01.
+      } else if ship:verticalspeed < -5 and T < 1 and altrad < 25{
+        set Tdiff to 0.001.
+      }else if ship:verticalspeed < -1 and T < 1 and altrad < 10{
+        set Tdiff to 0.0001.
+      }else if ship:verticalspeed < -0.5 and altrad < 5{
+        set Tdiff to 0.000005.
+      }else if ship:verticalspeed > 0 and T > 0 {
+        set Tdiff to - 1.
+      }else if ship:verticalspeed > -0.5 and T > 0 {
+        set Tdiff to - 0.000001.
+      }else if ship:verticalspeed > -1 and T > 0 {
+        set Tdiff to - 0.0001.
+      }else if ship:verticalspeed > -5 and T > 0 {
+        set Tdiff to - 0.001.
+      } else if ship:verticalspeed > -10 and T > 0 {
+        set Tdiff to - 0.01.
+      } else if ship:verticalspeed > -50 and T > 0 {
+        set Tdiff to - 0.1.
+      } else if ship:verticalspeed > -100 and T > 0 {
+        set Tdiff to - 0.1.
+      }.
+    }.
+
+    if ship:verticalspeed > -20 or ship:groundspeed < 1{
+      lock head to heading(90,90).
+    }else {
+      lock head to ship:srfretrograde.
+    }.
+
+  }else if altrad > estAlt + (prep){
+    set Tdiff to - 0.1.
+  }.
+  //throttle change
+  set T to T + Tdiff.
+  if T > 1 {
+    set T to 1.
+  } else if T < 0 {
+    set T to 0.
+  }.
+}.
+
+if ship:status = "LANDED" {
+  lock head to heading(90,90).
+
+}.

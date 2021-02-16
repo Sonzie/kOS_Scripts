@@ -1,0 +1,106 @@
+
+set targLatOld to targLat.
+set thisLatOld to thisLat.
+//set latDiffOld to latDiff.
+
+set targLngOld to targLng.
+set thisLngOld to thisLng.
+//set lngDiffOld to lngDiff.
+
+set targAltOld to targAlt.
+set thisAltOld to thisAlt.
+
+set rVelMagOld to rVelMag.
+//set altDiffOld to altDiff.
+
+//set posDiffOld to posDiff.
+set thisLngOld to thisLng.
+set rvdTOld to rvdT.
+//-----swap for init op
+set targPos to target:geoposition.
+set pos to ship:geoposition.
+
+set targLat to targPos:lat.
+set thisLat to pos:lat.
+//set latDiff to targLat - thisLat.
+
+set targLng to targPos:lng.
+set thisLng to pos:lng.
+//set lngDiff to targLng - thisLng.
+
+set targAlt to target:altitude.
+set thisAlt to ship:altitude.
+//set altDiff to targAlt - thisAlt.
+
+set rvdT to time:seconds.
+//done with raw data. now calculate
+set rvdDeltaT to rvdT - rvdTOld.
+set targLatDeltaM to ((targAlt + targAltOld)/2) * ((targLatOld - targLat)/360).
+set targLatVel to targLatDeltaM/rvdDeltaT.
+set thisLatDeltaM to ((thisAlt + thisAltOld)/2) * ((thisLatOld - thisLat)/360).
+set thisLatVel to thisLatDeltaM/rvdDeltaT.
+set rLatVel to targLatVel - thisLatVel.
+
+set targLngDeltaM to ((targAlt + targAltOld)/2) * ((targLngOld - targLng)/360).
+set targLngVel to targLngDeltaM/rvdDeltaT.
+set thisLngDeltaM to ((thisAlt + thisAltOld)/2) * ((thisLngOld - thisLng)/360).
+set thisLngVel to thisLngDeltaM/rvdDeltaT.
+set rLngVel to targLngVel - thisLngVel.
+
+set targAltDeltaM to targAltOld - targAlt.
+set targAltVel to targAltDeltaM/rvdDeltaT.
+set thisAltDeltaM to thisAltOld - thisAlt.
+set thisAltVel to thisAltDeltaM/rvdDeltaT.
+set rAltVel to targAltVel - thisAltVel.
+
+set rVelMag to sqrt((rLatVel^2) + (rLngVel^2) + (rAltVel^2)).
+set rAccel to (rVelMag - rVelMagOld)/rvdDeltaT.
+
+print "pos: " + pos + "          " at(0,5).
+print "targPos: " + targPos + "          " at(0,6).
+//print "latDiff: " + latDiff + "          " at(0,7).
+//print "latDiffOld: " + latDiffOld + "          " at(0,8).
+//print "latDiffOld - latDiff: " + (latDiffOld - latDiff) + "          " at(0,9).
+
+//print "lngDiff: " + lngDiff + "          " at(0,10).
+//print "lngDiffOld: " + lngDiffOld + "          " at(0,11).
+//print "lngDiffOld - lngDiff: " + (lngDiffOld - lngDiff) + "          " at(0,12).
+
+//print "altDif" + altDiff + "          " at(0,13).
+//print "altDifOld" + altDiffOld + "          " at(0,14).
+//print "altDifOld - altDiff" + (altDiffOld - altDiff) + "          " at(0,15).
+
+//print "posDiff: " + posDiff + "          " at (0, 16).
+//print "posDiffOld: " + posDiffOld + "          " at (0, 17).
+//print "posDiffOld - posDiff: " + (posDiffOld - posDiff) + "          " at(0,18).
+print "targLat: " + targLat at(0,8).
+print "thisLat: " + thisLat at(0,9).
+
+print "targLng: " + targLat at(0,11).
+print "thisLng: " + thisLng at(0,12).
+
+print "targAlt: " + targAlt at(0,14).
+print "thisAlt: " + thisAlt at(0,15).
+
+print "rvdDeltaT: " + rvdDeltaT at(0,17).
+
+print "targLatDeltaM: " + targLatDeltaM at(0,19).
+print "targLatVel: " + targLatVel at(0,20).
+print "thisLatDeltaM: " + thisLatDeltaM at(0,21).
+print "thisLatVel: " + thisLatVel at(0,22).
+print "rLatVel: " + rLatVel at(0,23).
+
+print "targLngDeltaM: " + targLngDeltaM at(0,25).
+print "targLngVel: " + targLngVel at(0,26).
+print "thisLngDeltaM: " + thisLngDeltaM at(0,27).
+print "thisLngVel: " + thisLngVel at(0,28).
+print "rLngVel: " + rLngVel at(0,29).
+
+print "targAltDeltaM: " + targAltDeltaM at(0,31).
+print "targAltVel: " + targAltVel at(0,32).
+print "thisAltDeltaM: " + thisAltDeltaM at(0,33).
+print "thisAltVel: " + thisAltVel at(0,34).
+print "rAltVel: " + rAltVel at(0,35).
+
+print "rVelMag: " + rVelMag + "          " at(0,37).
+print "rAccel: " + rAccel at(0,38).
